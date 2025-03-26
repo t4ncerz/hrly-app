@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAppProvider } from "@/components/providers/app-provider";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { useWindowWidth } from "@/components/utils/use-window-width";
@@ -116,6 +116,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -195,6 +196,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -322,6 +324,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -435,6 +438,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -507,6 +511,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -585,6 +590,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -778,6 +784,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -880,6 +887,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -989,6 +997,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -1063,6 +1072,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >
@@ -1144,6 +1154,7 @@ export default function Sidebar({
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
+                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           expandOnly ? setSidebarExpanded(true) : handleClick();
                         }}
                       >

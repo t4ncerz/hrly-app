@@ -210,7 +210,18 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
               {section.subsections && section.subsections.length > 0 && (
                 <div className="mt-4">
                   {section.title === "Analiza kategorii" ? (
-                    <AnalysisCategories subsections={section.subsections} />
+                    <AnalysisCategories
+                      subsections={
+                        section.subsections as {
+                          title: string;
+                          content: string;
+                          score: number;
+                          strengths: string[];
+                          improvements: string[];
+                          recommendations: string[];
+                        }[]
+                      }
+                    />
                   ) : (
                     <div className="space-y-4">
                       {section.subsections.map((subsection, subIndex) => (
@@ -272,11 +283,22 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
 }
 
 // Helper component for analysis categories
-function AnalysisCategories({ subsections }: { subsections: any[] }) {
+function AnalysisCategories({
+  subsections,
+}: {
+  subsections: {
+    title: string;
+    content: string;
+    score: number;
+    strengths: string[];
+    improvements: string[];
+    recommendations: string[];
+  }[];
+}) {
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion className="w-full">
       {subsections.map((category, index) => (
-        <AccordionItem value={`item-${index}`} key={index}>
+        <AccordionItem key={index}>
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center w-full">
               <span className="flex-1 text-left">{category.title}</span>

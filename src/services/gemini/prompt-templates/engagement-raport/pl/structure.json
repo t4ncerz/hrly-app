@@ -1,161 +1,135 @@
 {
-  "type": "OBJECT",
-  "title": "Raport z badania zaangażowania i satysfakcji pracowników",
-  "executiveSummary": "",
-  "sections": [
-    {
-      "type": "OBJECT",
-      "title": "Wprowadzenie",
-      "content": ""
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Tytuł raportu z badania zaangażowania"
     },
-    {
-      "type": "OBJECT",
-      "title": "Metodologia",
-      "content": ""
+    "executiveSummary": {
+      "type": "string",
+      "description": "Krótkie podsumowanie głównych wniosków z raportu"
     },
-    {
-      "type": "OBJECT",
-      "title": "Kluczowe wyniki",
-      "content": "",
-      "subsections": [
-        {
-          "type": "OBJECT",
-          "title": "Mocne strony",
-          "content": ""
-        },
-        {
-          "type": "OBJECT",
-          "title": "Obszary do poprawy",
-          "content": ""
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Tytuł sekcji"
+          },
+          "content": {
+            "type": "string",
+            "description": "Treść sekcji"
+          },
+          "type": {
+            "type": "string",
+            "description": "Typ sekcji"
+          },
+          "order": {
+            "type": "number",
+            "description": "Kolejność sekcji"
+          },
+          "subsections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Tytuł podsekcji"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Treść podsekcji"
+                },
+                "score": {
+                  "type": "number",
+                  "description": "Punktacja kategorii (0-10)"
+                },
+                "strengths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Lista mocnych stron"
+                },
+                "improvements": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Lista obszarów do poprawy"
+                },
+                "recommendations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Lista rekomendacji"
+                }
+              }
+            }
+          },
+          "prioritizedActions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "description": "Działanie do podjęcia"
+                },
+                "priority": {
+                  "type": "string",
+                  "description": "Priorytet działania (wysoki/średni/niski)"
+                },
+                "impact": {
+                  "type": "string",
+                  "description": "Wpływ działania na organizację"
+                },
+                "timeline": {
+                  "type": "string",
+                  "description": "Ramy czasowe dla działania"
+                }
+              }
+            }
+          }
         }
-      ]
+      }
     },
-    {
-      "type": "OBJECT",
-      "title": "Analiza kategorii",
-      "subsections": [
-        {
-          "type": "OBJECT",
-          "title": "Wynagrodzenie i benefity",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "reportType": {
+          "type": "string",
+          "description": "Typ raportu"
         },
-        {
-          "type": "OBJECT",
-          "title": "Wpływ i znaczenie pracy",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+        "generatedAt": {
+          "type": "string",
+          "description": "Data wygenerowania raportu"
         },
-        {
-          "type": "OBJECT",
-          "title": "Uznanie i docenianie",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+        "version": {
+          "type": "string",
+          "description": "Wersja raportu"
         },
-        {
-          "type": "OBJECT",
-          "title": "Technologia i narzędzia pracy",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+        "surveyName": {
+          "type": "string",
+          "description": "Nazwa badania"
         },
-        {
-          "type": "OBJECT",
-          "title": "Środowisko pracy i kultura organizacyjna",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+        "dateGenerated": {
+          "type": "string",
+          "description": "Data wygenerowania"
         },
-        {
-          "type": "OBJECT",
-          "title": "Równowaga praca-życie",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+        "dataSource": {
+          "type": "string",
+          "description": "Źródło danych"
         },
-        {
-          "type": "OBJECT",
-          "title": "Rozwój zawodowy i kariera",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
-        },
-        {
-          "type": "OBJECT",
-          "title": "Perspektywy i stabilność organizacji",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
-        },
-        {
-          "type": "OBJECT",
-          "title": "Obciążenie pracą i stres",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
-        },
-        {
-          "type": "OBJECT",
-          "title": "Komunikacja i przepływ informacji",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
-        },
-        {
-          "type": "OBJECT",
-          "title": "Autonomia i podejmowanie decyzji",
-          "content": "",
-          "score": 0,
-          "strengths": [],
-          "improvements": [],
-          "recommendations": []
+        "sampleSize": {
+          "type": "string",
+          "description": "Wielkość próby"
         }
-      ]
-    },
-    {
-      "type": "OBJECT",
-      "title": "Rekomendacje ogólne",
-      "content": "",
-      "prioritizedActions": [
-        {
-          "action": "",
-          "priority": "",
-          "impact": "",
-          "timeline": ""
-        }
-      ]
-    },
-    {
-      "type": "OBJECT",
-      "title": "Wnioski",
-      "content": ""
+      }
     }
-  ],
-  "metadata": {
-    "type": "OBJECT",
-    "dateGenerated": ""
   }
 }

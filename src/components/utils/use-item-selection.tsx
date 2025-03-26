@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSelectedItems } from "@/components/providers/selected-items-provider";
 
-export const useItemSelection = (items: any[]) => {
+export const useItemSelection = (items: { id: number }[]) => {
   const { selectedItems, setSelectedItems } = useSelectedItems();
   const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
 

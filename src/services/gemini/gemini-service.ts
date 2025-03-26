@@ -1,5 +1,5 @@
 import { ExaminationTable, ReportContent } from "@/drizzle/schema";
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import fs from "fs/promises";
 import path from "path";
 import { env } from "@/data/env/server";
@@ -30,27 +30,6 @@ async function loadPromptTemplate(
   }
 }
 
-async function loadStructureTemplate(
-  templateName: string,
-  language = "pl"
-): Promise<string> {
-  const templatePath = path.join(
-    process.cwd(),
-    "src",
-    "services",
-    "gemini",
-    "prompt-templates",
-    `${templateName}`,
-    language,
-    "structure.json"
-  );
-  try {
-    return await fs.readFile(templatePath, "utf-8");
-  } catch (error) {
-    console.error(`Error loading template ${templateName}:`, error);
-    throw new Error(`Failed to load prompt template: ${templateName}`);
-  }
-}
 /**
  * Generates a report based on examination data
  */
@@ -60,7 +39,6 @@ export async function generateReport(
   try {
     // Load the report prompt template
     const promptTemplate = await loadPromptTemplate("engagement-raport");
-    const structureTemplate = await loadStructureTemplate("engagement-raport");
 
     // Prepare examination data for the prompt
     const examinationData = examinations.map((exam) => ({
@@ -82,23 +60,22 @@ export async function generateReport(
 
     console.log("Sending prompt to Gemini...");
 
-    console.log(prompt, structureTemplate);
+    console.log(prompt);
 
-    // Get Gemini model
+    // Send the request to Gemini with the properly formatted schema
     const result = await genAI.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: prompt,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
-        temperature: 0.5,
+        temperature: 0.2,
+        topP: 0.8,
+        topK: 40,
+        maxOutputTokens: 8192,
         responseMimeType: "application/json",
-        responseSchema: JSON.parse(structureTemplate),
       },
     });
 
     const response = result.text;
-    console.log("Response received from Gemini");
-    console.log(response);
-    // Extract the text content
 
     if (!response) {
       throw new Error("No content received from Gemini");
@@ -106,6 +83,8 @@ export async function generateReport(
 
     // Parse the JSON response
     let content: ReportContent;
+
+    console.log(response);
     try {
       content = JSON.parse(response);
 
