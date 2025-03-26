@@ -12,6 +12,6 @@ export default defineConfig({
     user: env.POSTGRES_USER,
     database: env.POSTGRES_DATABASE,
     host: env.POSTGRES_HOST,
-    ssl: false,
+    url: env.POSTGRES_URL,
   },
 });

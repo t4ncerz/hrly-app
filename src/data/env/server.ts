@@ -7,6 +7,7 @@ export const env = createEnv({
     POSTGRES_USER: z.string(),
     POSTGRES_DATABASE: z.string(),
     POSTGRES_HOST: z.string(),
+    POSTGRES_URL: z.string(),
     CLERK_SECRET_KEY: z.string(),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
     OPENAI_API_KEY: z.string(),
