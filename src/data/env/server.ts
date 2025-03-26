@@ -3,10 +3,10 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    DATABASE_PASSWORD: z.string(),
-    DATABASE_USER: z.string(),
-    DATABASE_NAME: z.string(),
-    DATABASE_HOST: z.string(),
+    POSTGRES_PASSWORD: z.string(),
+    POSTGRES_USER: z.string(),
+    POSTGRES_DATABASE: z.string(),
+    POSTGRES_HOST: z.string(),
     CLERK_SECRET_KEY: z.string(),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
     OPENAI_API_KEY: z.string(),
