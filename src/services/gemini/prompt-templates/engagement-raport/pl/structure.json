@@ -1,0 +1,161 @@
+{
+  "type": "OBJECT",
+  "title": "Raport z badania zaangażowania i satysfakcji pracowników",
+  "executiveSummary": "",
+  "sections": [
+    {
+      "type": "OBJECT",
+      "title": "Wprowadzenie",
+      "content": ""
+    },
+    {
+      "type": "OBJECT",
+      "title": "Metodologia",
+      "content": ""
+    },
+    {
+      "type": "OBJECT",
+      "title": "Kluczowe wyniki",
+      "content": "",
+      "subsections": [
+        {
+          "type": "OBJECT",
+          "title": "Mocne strony",
+          "content": ""
+        },
+        {
+          "type": "OBJECT",
+          "title": "Obszary do poprawy",
+          "content": ""
+        }
+      ]
+    },
+    {
+      "type": "OBJECT",
+      "title": "Analiza kategorii",
+      "subsections": [
+        {
+          "type": "OBJECT",
+          "title": "Wynagrodzenie i benefity",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Wpływ i znaczenie pracy",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Uznanie i docenianie",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Technologia i narzędzia pracy",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Środowisko pracy i kultura organizacyjna",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Równowaga praca-życie",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Rozwój zawodowy i kariera",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Perspektywy i stabilność organizacji",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Obciążenie pracą i stres",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Komunikacja i przepływ informacji",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        },
+        {
+          "type": "OBJECT",
+          "title": "Autonomia i podejmowanie decyzji",
+          "content": "",
+          "score": 0,
+          "strengths": [],
+          "improvements": [],
+          "recommendations": []
+        }
+      ]
+    },
+    {
+      "type": "OBJECT",
+      "title": "Rekomendacje ogólne",
+      "content": "",
+      "prioritizedActions": [
+        {
+          "action": "",
+          "priority": "",
+          "impact": "",
+          "timeline": ""
+        }
+      ]
+    },
+    {
+      "type": "OBJECT",
+      "title": "Wnioski",
+      "content": ""
+    }
+  ],
+  "metadata": {
+    "type": "OBJECT",
+    "dateGenerated": ""
+  }
+}
