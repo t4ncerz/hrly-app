@@ -8,7 +8,7 @@ import {
   FieldPath,
   FormProvider,
 } from "react-hook-form";
-import Tooltip from "@/components/tooltip";
+import Tooltip from "@/components/ui/tooltip";
 
 // Form root component - wrapper around FormProvider
 const Form = FormProvider;

@@ -1,21 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import Sidebar from "@/components/ui/sidebar";
-import Header from "@/components/ui/header";
 import NotFoundImage from "../../public/images/404-illustration.svg";
 import NotFoundImageDark from "../../public/images/404-illustration-dark.svg";
 
 export default function NotFound() {
   return (
     <div className="flex h-[100dvh] overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar />
-
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/*  Site header */}
-        <Header />
-
         <main className="grow [&>*:first-child]:scroll-mt-16">
           <div className="relative bg-white dark:bg-gray-900 h-full">
             <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
