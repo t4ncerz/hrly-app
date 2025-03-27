@@ -140,8 +140,6 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(report);
-
   useEffect(() => {
     async function fetchReport() {
       try {
@@ -212,7 +210,18 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
               {section.subsections && section.subsections.length > 0 && (
                 <div className="mt-4">
                   {section.title === "Analiza kategorii" ? (
-                    <AnalysisCategories subsections={section.subsections} />
+                    <AnalysisCategories
+                      subsections={
+                        section.subsections as {
+                          title: string;
+                          content: string;
+                          score: number;
+                          strengths: string[];
+                          improvements: string[];
+                          recommendations: string[];
+                        }[]
+                      }
+                    />
                   ) : (
                     <div className="space-y-4">
                       {section.subsections.map((subsection, subIndex) => (
@@ -274,7 +283,18 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
 }
 
 // Helper component for analysis categories
-function AnalysisCategories({ subsections }: { subsections: any[] }) {
+function AnalysisCategories({
+  subsections,
+}: {
+  subsections: {
+    title: string;
+    content: string;
+    score: number;
+    strengths: string[];
+    improvements: string[];
+    recommendations: string[];
+  }[];
+}) {
   return (
     <Accordion className="w-full">
       {subsections.map((category, index) => (
