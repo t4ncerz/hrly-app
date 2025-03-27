@@ -12,6 +12,7 @@ export const env = createEnv({
     CLERK_WEBHOOK_SECRET: z.string().min(1),
     OPENAI_API_KEY: z.string(),
     GEMINI_API_KEY: z.string(),
+    POSTGRES_URL_NON_POOLING: z.string(),
   },
   experimental__runtimeEnv: process.env,
 });
