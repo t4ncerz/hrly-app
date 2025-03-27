@@ -32,6 +32,7 @@
     "openai": "^4.87.3",
     "papaparse": "^5.5.2",
     "pg": "^8.14.0",
+    "postgres": "^3.4.5",
     "react": "19.0.0",
     "react-day-picker": "^9.5.1",
     "react-dom": "19.0.0",
