@@ -23,10 +23,10 @@ export default function ExaminationHome() {
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Recent Reports
+            Create report
           </h2>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
-            View and manage your recent reports.
+            Create a new report from your existing examination data.
           </p>
           <Link
             href="/reports/create"
