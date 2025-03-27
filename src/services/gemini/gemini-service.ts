@@ -65,7 +65,7 @@ export async function generateReport(
     // Send the request to Gemini with the properly formatted schema
     const result = await genAI.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      contents: prompt,
       config: {
         temperature: 0.2,
         topP: 0.8,
