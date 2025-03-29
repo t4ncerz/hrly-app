@@ -1,61 +1,52 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { Form, Input, TextArea } from "@/components/form/form";
-import { uploadExamination } from "../actions/examination";
+import { Form, Input, TextArea, FileInput } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { uploadExamination } from "../actions/examination";
 
-// Define form schema with zod
 const formSchema = z.object({
   name: z.string().min(1, "Survey name is required"),
   description: z.string().optional(),
+  file: z
+    .instanceof(File, { message: "Please upload a file" })
+    .refine((file) => file !== undefined, { message: "Please upload a file" }),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
 export function ExaminationUploadForm() {
-  const [file, setFile] = useState<File | null>(null);
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
+      file: undefined,
     },
   });
 
   const { control, handleSubmit } = methods;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0] || null;
-    setFile(selectedFile);
-  };
-
-  async function onSubmit(data: FormValues) {
-    if (!file) {
-      setError("Please upload a file");
+  async function onSubmit(formValues: FormValues) {
+    if (!formValues.file) {
       return;
     }
 
-    setError(null);
-    setIsLoading(true);
-
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("name", data.name);
-      formData.append("description", data.description || "");
-
-      await uploadExamination(formData);
-      router.push(`/`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setIsLoading(true);
+      setError(null);
+      await uploadExamination(formValues);
+      router.push("/");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +55,6 @@ export function ExaminationUploadForm() {
   return (
     <div className="w-full max-w-2xl">
       <h2 className="text-2xl font-bold mb-4">Upload Survey Data</h2>
-
       <Form {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input
@@ -83,22 +73,14 @@ export function ExaminationUploadForm() {
             rows={3}
           />
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium mb-1" htmlFor="file">
-              Upload CSV File <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="file"
-              className="form-input w-full"
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileChange}
-              required
-            />
-            <p className="text-sm text-muted-foreground">
-              Upload a CSV or Excel file with survey data
-            </p>
-          </div>
+          <FileInput
+            control={control}
+            name="file"
+            label="Upload Survey File"
+            accept=".csv,.xlsx,.xls"
+            supportingText="Upload a CSV or Excel file with survey data"
+            required
+          />
 
           {error && (
             <div className="bg-red-50 p-3 text-red-700 rounded-md text-sm">
@@ -106,17 +88,11 @@ export function ExaminationUploadForm() {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-          >
+          <Button type="submit" variant="primary" isLoading={isLoading}>
             {isLoading ? "Processing..." : "Process Survey Data"}
-          </button>
+          </Button>
         </form>
       </Form>
     </div>
   );
 }
-
-export default ExaminationUploadForm;

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function ExaminationHome() {
   return (
@@ -14,11 +15,8 @@ export default function ExaminationHome() {
           <p className="text-gray-500 dark:text-gray-400 mb-4">
             Upload your CSV examination data and let our AI analyze it for you.
           </p>
-          <Link
-            href="/examination/upload"
-            className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white inline-block"
-          >
-            Upload Examination
+          <Link href="/examination/upload">
+            <Button variant="primary">Upload Examination</Button>
           </Link>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
@@ -28,11 +26,8 @@ export default function ExaminationHome() {
           <p className="text-gray-500 dark:text-gray-400 mb-4">
             Create a new report from your existing examination data.
           </p>
-          <Link
-            href="/reports/create"
-            className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white inline-block"
-          >
-            Create New Report
+          <Link href="/reports/create">
+            <Button variant="primary">Create New Report</Button>
           </Link>
         </div>
       </div>
