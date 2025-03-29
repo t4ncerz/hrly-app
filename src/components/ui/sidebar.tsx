@@ -105,7 +105,7 @@ export function Sidebar({
               {/* Dashboard */}
               <li
                 className={`pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-linear-to-r ${
-                  segments.includes("inbox") &&
+                  segments.length === 0 &&
                   "from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]"
                 }`}
               >
@@ -113,7 +113,7 @@ export function Sidebar({
                   <div className="flex items-center">
                     <svg
                       className={`shrink-0 fill-current ${
-                        segments.includes("inbox")
+                        segments.length === 0
                           ? "text-violet-500"
                           : "text-gray-400 dark:text-gray-500"
                       }`}
@@ -130,8 +130,8 @@ export function Sidebar({
                   </div>
                 </SidebarLink>
               </li>
-              {/* Settings */}
-              <SidebarLinkGroup open={segments.includes("settings")}>
+              {/* Reports */}
+              <SidebarLinkGroup open={segments.includes("reports")}>
                 {(handleClick, open) => {
                   return (
                     <>
@@ -154,7 +154,11 @@ export function Sidebar({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                             <svg
-                              className={`shrink-0 fill-current text-gray-400 dark:text-gray-500`}
+                              className={`shrink-0 fill-current ${
+                                segments.includes("reports")
+                                  ? "text-violet-500"
+                                  : "text-gray-400 dark:text-gray-500"
+                              }`}
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
                               height="16"
@@ -201,7 +205,7 @@ export function Sidebar({
                   );
                 }}
               </SidebarLinkGroup>
-              {/* Utility */}
+              {/* Examination */}
               <SidebarLinkGroup open={segments.includes("examination")}>
                 {(handleClick, open) => {
                   return (
@@ -296,7 +300,7 @@ export function Sidebar({
               {/* Settings */}
               <li
                 className={`pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-linear-to-r ${
-                  segments.includes("inbox") &&
+                  segments.includes("settings") &&
                   "from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]"
                 }`}
               >
