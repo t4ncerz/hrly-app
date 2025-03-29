@@ -13,6 +13,8 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string(),
     GEMINI_API_KEY: z.string(),
     POSTGRES_SESSION_POOLER_URL: z.string(),
+    BASIC_AUTH_USERNAME: z.string().default("admin"),
+    BASIC_AUTH_PASSWORD: z.string().default("password"),
   },
   experimental__runtimeEnv: process.env,
 });

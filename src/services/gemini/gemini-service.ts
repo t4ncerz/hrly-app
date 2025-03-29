@@ -1,32 +1,28 @@
 import { ExaminationTable, ReportContent } from "@/drizzle/schema";
 import { GoogleGenAI } from "@google/genai";
-import fs from "fs/promises";
-import path from "path";
 import { env } from "@/data/env/server";
 
 // Initialize Google Generative AI client
 const genAI = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
-// Helper function to load templates
-async function loadPromptTemplate(
-  templateName: string,
-  language = "pl"
-): Promise<string> {
-  const templatePath = path.join(
-    process.cwd(),
-    "src",
-    "services",
-    "gemini",
-    "prompt-templates",
-    `${templateName}`,
-    language,
-    "prompt.md"
-  );
+// Helper function to load templates from Vercel Blob
+async function loadPromptTemplate(): Promise<string> {
   try {
-    return await fs.readFile(templatePath, "utf-8");
+    // Fetch the template from Vercel Blob
+    const response = await fetch(
+      "https://tsh79vfw57xlyjcz.public.blob.vercel-storage.com/prompt-mCyCX6t54UPfkknmDksXURiSCA575t.md"
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch template: ${response.status} ${response.statusText}`
+      );
+    }
+
+    return await response.text();
   } catch (error) {
-    console.error(`Error loading template ${templateName}:`, error);
-    throw new Error(`Failed to load prompt template: ${templateName}`);
+    console.error(`Error loading template:`, error);
+    throw new Error(`Failed to load prompt template`);
   }
 }
 
@@ -38,7 +34,7 @@ export async function generateReport(
 ): Promise<ReportContent> {
   try {
     // Load the report prompt template
-    const promptTemplate = await loadPromptTemplate("engagement-raport");
+    const promptTemplate = await loadPromptTemplate();
 
     // Prepare examination data for the prompt
     const examinationData = examinations.map((exam) => ({
@@ -67,7 +63,7 @@ export async function generateReport(
       model: "gemini-2.0-flash",
       contents: prompt,
       config: {
-        temperature: 0.2,
+        temperature: 0.5,
         topP: 0.8,
         topK: 40,
         maxOutputTokens: 8192,
