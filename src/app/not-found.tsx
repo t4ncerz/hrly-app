@@ -30,14 +30,14 @@ export default function NotFound() {
                     />
                   </div>
                   <div className="mb-6">
-                    Hmm...this page doesn&apos;t exist. Try searching for
-                    something else!
+                    Hmm...ta strona nie istnieje. Spróbuj poszukać czegoś
+                    innego!
                   </div>
                   <Link
                     href="/"
                     className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
                   >
-                    Back To Dashboard
+                    Powrót do Dashboardu
                   </Link>
                 </div>
               </div>
