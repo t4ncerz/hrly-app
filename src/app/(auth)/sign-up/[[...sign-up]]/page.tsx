@@ -14,7 +14,7 @@ export default function SignUpPage() {
             <AuthHeader />
             <div className="max-w-sm mx-auto w-full px-4 py-8">
               <h1 className="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">
-                Create your Account
+                Utwórz konto
               </h1>
               <div className="flex justify-center">
                 <SignUp

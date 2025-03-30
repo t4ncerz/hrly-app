@@ -147,7 +147,7 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
         setReport(reportData);
       } catch (err) {
         console.error("Error fetching report:", err);
-        setError("Failed to load report");
+        setError("Nie udało się załadować raportu");
       } finally {
         setLoading(false);
       }
@@ -163,7 +163,7 @@ export function ReportDisplay({ reportId }: ReportDisplayProps) {
   if (error || !report) {
     return (
       <div className="p-4 text-red-500">
-        Error: {error || "Report not found"}
+        Błąd: {error || "Nie znaleziono raportu"}
       </div>
     );
   }

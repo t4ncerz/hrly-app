@@ -11,9 +11,9 @@ import { useRouter } from "next/navigation";
 
 // Define form schema with zod
 const formSchema = z.object({
-  name: z.string().min(1, "Report name is required"),
+  name: z.string().min(1, "Nazwa raportu jest wymagana"),
   description: z.string().optional(),
-  examinationId: z.string().min(1, "Please select an examination"),
+  examinationId: z.string().min(1, "Proszę wybrać badanie"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -38,7 +38,7 @@ export function ReportCreateForm() {
         setExaminations(examinations);
       } catch (err) {
         console.error("Error fetching examinations:", err);
-        setError("Failed to load examinations. Please try again.");
+        setError("Nie udało się załadować badań. Spróbuj ponownie.");
       } finally {
         setFetchingExaminations(false);
       }
@@ -77,7 +77,7 @@ export function ReportCreateForm() {
   }
 
   if (fetchingExaminations) {
-    return <div>Loading examinations...</div>;
+    return <div>Ładowanie badań...</div>;
   }
 
   return (
@@ -87,23 +87,23 @@ export function ReportCreateForm() {
           <Input
             control={control}
             name="name"
-            label="Report Name"
-            placeholder="Q2 Employee Satisfaction Analysis"
+            label="Nazwa Raportu"
+            placeholder="Analiza Satysfakcji Pracowników Q2"
             required
           />
 
           <TextArea
             control={control}
             name="description"
-            label="Description (Optional)"
-            placeholder="Report analyzing Q2 employee satisfaction survey results"
+            label="Opis (Opcjonalny)"
+            placeholder="Raport analizujący wyniki ankiety satysfakcji pracowników za Q2"
             rows={3}
           />
 
           <Select
             control={control}
             name="examinationId"
-            label="Select Examination"
+            label="Wybierz Badanie"
             required
             options={examinations.map((exam) => ({
               value: exam.id,
@@ -122,7 +122,7 @@ export function ReportCreateForm() {
             disabled={isLoading}
             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
           >
-            {isLoading ? "Generating Report..." : "Generate Report"}
+            {isLoading ? "Generowanie Raportu..." : "Generuj Raport"}
           </button>
         </form>
       </Form>

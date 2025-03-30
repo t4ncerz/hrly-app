@@ -10,11 +10,11 @@ import { useState } from "react";
 import { uploadExamination } from "../actions/examination";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Survey name is required"),
+  name: z.string().min(1, "Nazwa badania jest wymagana"),
   description: z.string().optional(),
   file: z
-    .instanceof(File, { message: "Please upload a file" })
-    .refine((file) => file !== undefined, { message: "Please upload a file" }),
+    .instanceof(File, { message: "Proszę wgrać plik" })
+    .refine((file) => file !== undefined, { message: "Proszę wgrać plik" }),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
@@ -46,7 +46,7 @@ export function ExaminationUploadForm() {
       await uploadExamination(formValues);
       router.push("/");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "An error occurred");
+      setError(e instanceof Error ? e.message : "Wystąpił błąd");
     } finally {
       setIsLoading(false);
     }
@@ -60,25 +60,25 @@ export function ExaminationUploadForm() {
           <Input
             control={control}
             name="name"
-            label="Survey Name"
-            placeholder="Employee Satisfaction 2023"
+            label="Nazwa Badania"
+            placeholder="Badanie Satysfakcji Pracowników 2023"
             required
           />
 
           <TextArea
             control={control}
             name="description"
-            label="Description (Optional)"
-            placeholder="Annual employee satisfaction survey results"
+            label="Opis (Opcjonalny)"
+            placeholder="Wyniki corocznego badania satysfakcji pracowników"
             rows={3}
           />
 
           <FileInput
             control={control}
             name="file"
-            label="Upload Survey File"
+            label="Wgraj Plik Badania"
             accept=".csv,.xlsx,.xls"
-            supportingText="Upload a CSV or Excel file with survey data"
+            supportingText="Wgraj plik CSV lub Excel z danymi badania"
             required
           />
 
@@ -89,7 +89,7 @@ export function ExaminationUploadForm() {
           )}
 
           <Button type="submit" variant="primary" isLoading={isLoading}>
-            {isLoading ? "Processing..." : "Process Survey Data"}
+            {isLoading ? "Przetwarzanie..." : "Przetwórz Dane Badania"}
           </Button>
         </form>
       </Form>

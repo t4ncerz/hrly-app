@@ -10,24 +10,25 @@ export default function ExaminationHome() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Upload Examination Data
+            Wgraj Dane Badania
           </h2>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
-            Upload your CSV examination data and let our AI analyze it for you.
+            Wgraj dane badania w formacie CSV i pozwól naszej sztucznej
+            inteligencji je przeanalizować.
           </p>
           <Link href="/examination/upload">
-            <Button variant="primary">Upload Examination</Button>
+            <Button variant="primary">Wgraj Badanie</Button>
           </Link>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Create report
+            Utwórz Raport
           </h2>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
-            Create a new report from your existing examination data.
+            Utwórz nowy raport na podstawie istniejących danych badania.
           </p>
           <Link href="/reports/create">
-            <Button variant="primary">Create New Report</Button>
+            <Button variant="primary">Utwórz Nowy Raport</Button>
           </Link>
         </div>
       </div>
