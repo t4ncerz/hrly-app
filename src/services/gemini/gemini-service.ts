@@ -1,4 +1,4 @@
-import { ExaminationTable, ReportContent } from "@/drizzle/schema";
+import { ExaminationTable, GenerationContent } from "@/drizzle/schema";
 import { GoogleGenAI } from "@google/genai";
 import { env } from "@/data/env/server";
 
@@ -31,7 +31,7 @@ async function loadPromptTemplate(): Promise<string> {
  */
 export async function generateReport(
   examinations: (typeof ExaminationTable.$inferSelect)[]
-): Promise<ReportContent> {
+): Promise<GenerationContent> {
   try {
     // Load the report prompt template
     const promptTemplate = await loadPromptTemplate();
@@ -42,7 +42,7 @@ export async function generateReport(
       name: exam.name,
       description: exam.description,
       type: exam.type,
-      sourceData: exam.sourceData,
+      sourceData: exam.extractedData,
     }));
 
     // Get current date for the report metadata
@@ -78,7 +78,7 @@ export async function generateReport(
     }
 
     // Parse the JSON response
-    let content: ReportContent;
+    let content: GenerationContent;
 
     console.log(response);
     try {
