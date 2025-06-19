@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
-import { pgTable, uuid, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, jsonb } from "drizzle-orm/pg-core";
 import { createdAt, updatedAt } from "../schemaHelpers";
 import { ExaminationTable } from "./examination";
 
-export type GenerationContent = {
+export type ReportContent = {
   title: string;
   executiveSummary: string;
   // Main report sections
@@ -38,15 +38,16 @@ export type GenerationContent = {
   };
 };
 
-// Generation Table
-export const GenerationTable = pgTable("generations", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  examinationId: uuid("examination_id")
+// Report Table
+export const ReportTable = pgTable("reports", {
+  id: uuid().primaryKey(),
+  name: text().notNull(),
+  examinationId: uuid()
     .references(() => ExaminationTable.id)
     .notNull(),
 
   // Report content with structured format for frontend consumption
-  content: jsonb("content").$type<GenerationContent>().notNull(),
+  content: jsonb("content").$type<ReportContent>().notNull(),
 
   // Standard timestamps
   createdAt,
@@ -54,12 +55,9 @@ export const GenerationTable = pgTable("generations", {
 });
 
 // Report relationships
-export const GenerationRelationships = relations(
-  GenerationTable,
-  ({ one }) => ({
-    examination: one(ExaminationTable, {
-      fields: [GenerationTable.examinationId],
-      references: [ExaminationTable.id],
-    }),
-  })
-);
+export const ReportRelationships = relations(ReportTable, ({ one }) => ({
+  examination: one(ExaminationTable, {
+    fields: [ReportTable.examinationId],
+    references: [ExaminationTable.id],
+  }),
+}));

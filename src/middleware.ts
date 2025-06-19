@@ -16,8 +16,6 @@ function isWebhookEndpoint(pathname: string): boolean {
 
 // Core basic authentication logic
 function performBasicAuth(request: NextRequest): NextResponse | null {
-  return NextResponse.next();
-
   if (isWebhookEndpoint(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
