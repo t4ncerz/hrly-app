@@ -7,5 +7,6 @@ export default defineConfig({
   dialect: "postgresql",
   dbCredentials: {
     url: env.POSTGRES_SESSION_POOLER_URL,
+    port: 5432,
   },
 });

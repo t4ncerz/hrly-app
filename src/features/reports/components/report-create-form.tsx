@@ -67,6 +67,7 @@ export function ReportCreateForm() {
       const report = await createReport({
         examinationId: data.examinationId,
         name: data.name,
+        description: data.description,
       });
 
       router.push(`/reports/${report.id}`);

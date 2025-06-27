@@ -6,14 +6,17 @@ import { insertReport, getReport as getReportFromDb } from "../db/reports";
 export async function createReport({
   examinationId,
   name,
+  description,
 }: {
   examinationId: string;
   name: string;
+  description?: string;
 }) {
   try {
     const report = await insertReport(examinationId, {
       id: randomUUID(),
       name,
+      description,
     });
 
     return report;
