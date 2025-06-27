@@ -4,7 +4,6 @@ import {
   ReportTable,
   type Report,
   type NewReport,
-  type ReportContent,
 } from "@/drizzle/schema";
 import { db } from "@/drizzle/db";
 import { generateReport } from "@/services/gemini/gemini-service";
@@ -41,24 +40,6 @@ export async function insertReport(
   const data: NewReport = {
     id: metadataForReport.id,
     name: metadataForReport.name,
-    examinationId,
-    content,
-  };
-
-  const [newReport] = await db.insert(ReportTable).values(data).returning();
-
-  if (!newReport) {
-    throw new Error("Failed to create report");
-  }
-
-  return newReport;
-}
-
-export async function createReport(
-  examinationId: string,
-  content: ReportContent
-): Promise<Report> {
-  const data: NewReport = {
     examinationId,
     content,
   };
