@@ -1209,7 +1209,7 @@ async function generateDetailedAreaContent(
         1. Na podstawie 'overall_average', stwórz 'summary_paragraph' i 2-3 'key_findings_points'. Użyj stylu analitycznego.
         2. Wypełnij 'team_breakdown.data' dla KAŻDEGO działu z listy (${departmentsList.join(
           ", "
-        )}), tworząc szczegółową 'interpretation_paragraph' i 2-3 konkretne 'improvement_recommendations'.
+        )}), tworząc szczegółową 'interpretation_paragraph' na podstawie 'description' z bazy wiedzy i jeśli to moliwe to umieść tam analizę jak czynniki z danego obszaru prezentują się na podstawie description. 2-3 konkretne 'improvement_recommendations' na podstawie 'recommendations' z bazy wiedzy.
         3. Wygeneruj 2-3 bloki rekomendacji w 'organizational_recommendations'.
         4. W 'business_impact.points' umieść tekst z 'businessImpact' z bazy wiedzy.
         
