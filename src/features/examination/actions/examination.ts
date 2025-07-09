@@ -57,7 +57,7 @@ const MODEL_CONFIG: GenerationConfig = {
   temperature: 0.1,
 };
 const model: GenerativeModel = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash",
+  model: "gemini-1.5-flash-latest",
   generationConfig: MODEL_CONFIG,
 });
 
