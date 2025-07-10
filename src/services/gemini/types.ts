@@ -28,6 +28,7 @@ export interface AreaStatistics {
 export interface DetailedAreaData {
   area_name: string;
   overall_average: number;
+  factor_scores: { [key: string]: number };
   team_scores: { [key: string]: number };
 }
 
@@ -94,15 +95,23 @@ export interface InitialAnalysisResult {
 export interface KnowledgeBaseLevel {
   description: string;
   recommendations: string[];
+}
+
+export interface KnowledgeBaseFactor {
+  "1": KnowledgeBaseLevel;
+  "2": KnowledgeBaseLevel;
+  "3": KnowledgeBaseLevel;
+  "4": KnowledgeBaseLevel;
+  "5": KnowledgeBaseLevel;
   businessImpact: string;
 }
 
 export interface KnowledgeBaseArea {
-  [key: string]: KnowledgeBaseLevel;
+  [factorName: string]: KnowledgeBaseFactor;
 }
 
 export interface KnowledgeBase {
-  [key: string]: KnowledgeBaseArea;
+  [areaName: string]: KnowledgeBaseArea;
 }
 
 export interface OverallContentResult {
@@ -126,8 +135,7 @@ export interface OverallContentResult {
   };
 }
 
-export interface DetailedAreaContent {
-  area_name: string;
+export interface DetailedAreaContent extends DetailedAreaData {
   company_summary: {
     title: string;
     overall_average_text: string;
