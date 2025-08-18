@@ -1,11 +1,5 @@
 import { ExaminationTable, ReportContent } from "@/drizzle/schema";
 import {
-  GoogleGenerativeAI,
-  GenerationConfig,
-  GenerativeModel,
-} from "@google/generative-ai";
-import { env } from "@/data/env/server";
-import {
   SurveyRespondent,
   DetailedAreaData,
   StatisticsResult,
@@ -13,193 +7,60 @@ import {
   OverallContentResult,
   DetailedAreaContent,
   LeaderGuideline,
-  ApiResponse,
-  KnowledgeBase,
 } from "./types";
+import { getKnowledgeBaseProvider } from "../knowledge-base/provider";
+import { KnowledgeBaseMap, KnowledgeBaseEntry } from "../knowledge-base/types";
 
-// --- KROK 1: NOWA, ZAHARDKODOWANA I SZCZEGÓŁOWA BAZA WIEDZY ---
-function getKnowledgeBase(): KnowledgeBase {
-  // Ta funkcja zawiera teraz zagnieżdżoną strukturę Obszar -> Czynnik -> Dane
-  return {
-    "Środowisko Pracy i Kultura organizacyjna": {
-      "Komfort psychiczny w pracy": {
-        "1": {
-          description:
-            "Pracownicy odczuwają silny stres i niechęć do pracy. Brak poczucia bezpieczeństwa paraliżuje inicjatywę i prowadzi do wypalenia zawodowego.",
-          recommendations: [
-            "Natychmiastowa interwencja HR w celu diagnozy i rozwiązania problemów.",
-            "Szkolenia dla menedżerów z budowania bezpieczeństwa psychologicznego.",
-            "Wprowadzenie anonimowych kanałów zgłaszania nieprawidłowości.",
-          ],
-        },
-        "2": {
-          description:
-            "Pracownicy czują się niepewnie, a atmosfera jest napięta. Boją się popełniać błędy i unikać otwartej komunikacji.",
-          recommendations: [
-            "Warsztaty z komunikacji i rozwiązywania konfliktów.",
-            "Regularne spotkania 1:1 menedżerów z pracownikami.",
-            "Promowanie kultury otwartego feedbacku.",
-          ],
-        },
-        "3": {
-          description:
-            "Atmosfera jest neutralna, ale brakuje poczucia pełnego bezpieczeństwa. Pracownicy wykonują obowiązki, ale bez entuzjazmu.",
-          recommendations: [
-            "Inicjatywy integracyjne budujące zaufanie w zespołach.",
-            "Wprowadzenie programów wellbeingowych.",
-            "Jasne zdefiniowanie wartości firmy i zasad współpracy.",
-          ],
-        },
-        "4": {
-          description:
-            "Pracownicy czują się w większości bezpiecznie i komfortowo. Są otwarci na współpracę i dzielenie się pomysłami.",
-          recommendations: [
-            "Wzmacnianie pozytywnych praktyk przez liderów.",
-            "Organizowanie wydarzeń firmowych celebrujących sukcesy.",
-            "Włączenie pracowników w działania employer brandingowe.",
-          ],
-        },
-        "5": {
-          description:
-            "Pracownicy czują się w pełni bezpiecznie, są szanowani i doceniani. Firma jest miejscem, gdzie można być sobą i rozwijać swój potencjał.",
-          recommendations: [
-            "Uczynienie z komfortu psychicznego filaru kultury organizacyjnej.",
-            "Promowanie firmy jako wzoru do naśladowania.",
-            "Programy mentorskie i wsparcia dla pracowników.",
-          ],
-        },
-        businessImpact:
-          "Niski komfort psychiczny prowadzi do wzrostu absencji, rotacji i spadku produktywności. Wysoki komfort buduje lojalność i innowacyjność.",
-      },
-      "Relacje z przełożonymi": {
-        "1": {
-          description:
-            "Pracownicy nie ufają swoim przełożonym, komunikacja jest bardzo słaba lub konfliktowa. Brak wsparcia i jasnych oczekiwań.",
-          recommendations: [
-            "Pilne szkolenia dla menedżerów z umiejętności liderskich.",
-            "Wprowadzenie oceny 360 stopni dla kadry zarządzającej.",
-            "Mediacje w zespołach o najwyższym poziomie konfliktu.",
-          ],
-        },
-        "2": {
-          description:
-            "Relacje są formalne i zdystansowane. Pracownicy otrzymują niewiele wsparcia, a feedback jest rzadki i często negatywny.",
-          recommendations: [
-            "Wdrożenie regularnych spotkań 1:1 (one-on-one).",
-            "Szkolenia dla menedżerów z udzielania konstruktywnego feedbacku (np. model FUKO).",
-            "Jasne zdefiniowanie celów i oczekiwań.",
-          ],
-        },
-        "3": {
-          description:
-            "Relacje są poprawne, ale powierzchowne. Przełożeni koncentrują się na zadaniach, a nie na rozwoju i motywacji pracowników.",
-          recommendations: [
-            "Programy coachingowe i mentoringowe dla menedżerów.",
-            "Wprowadzenie indywidualnych planów rozwoju dla pracowników.",
-            "Inicjatywy integrujące menedżerów z zespołami.",
-          ],
-        },
-        "4": {
-          description:
-            "Pracownicy ufają swoim przełożonym i czują ich wsparcie. Komunikacja jest otwarta, a cele są jasno komunikowane.",
-          recommendations: [
-            "Delegowanie większej odpowiedzialności i autonomii pracownikom.",
-            "Promowanie liderów jako mentorów i coachów.",
-            "Wspólne celebrowanie sukcesów zespołowych.",
-          ],
-        },
-        "5": {
-          description:
-            "Przełożeni są postrzegani jako inspirujący liderzy i partnerzy. Budują zaufanie, motywują do rozwoju i tworzą znakomitą atmosferę.",
-          recommendations: [
-            "Programy rozwoju liderskiego dla najlepszych menedżerów.",
-            "Uczynienie z jakości przywództwa kluczowego elementu strategii firmy.",
-            "Wykorzystanie liderów w procesach employer brandingowych.",
-          ],
-        },
-        businessImpact:
-          "Słabe relacje z przełożonymi są główną przyczyną dobrowolnych odejść z pracy. Dobre przywództwo bezpośrednio przekłada się na zaangażowanie i wyniki zespołu.",
-      },
-      "Atmosfera w zespole": {
-        "1": {
-          description:
-            "W zespole panują konflikty, brak jest współpracy i zaufania. Pracownicy rywalizują ze sobą zamiast wspierać.",
-          recommendations: [
-            "Interwencja facylitatora lub mediatora w zespole.",
-            "Warsztaty z komunikacji i współpracy.",
-            "Jasne określenie ról, celów i zasad współpracy w zespole.",
-          ],
-        },
-        "2": {
-          description:
-            "Współpraca jest ograniczona do minimum. Brakuje integracji i poczucia wspólnego celu. Pojawiają się podgrupy i plotki.",
-          recommendations: [
-            "Organizacja warsztatów integracyjnych i team-buildingowych.",
-            "Wprowadzenie wspólnych celów zespołowych i systemów nagród.",
-            "Regularne spotkania zespołowe w celu poprawy komunikacji.",
-          ],
-        },
-        "3": {
-          description:
-            "Atmosfera jest neutralna. Pracownicy są dla siebie uprzejmi, ale brakuje silniejszych więzi i ducha zespołowego.",
-          recommendations: [
-            "Inicjowanie nieformalnych spotkań i aktywności integracyjnych.",
-            "Tworzenie wspólnych przestrzeni do relaksu i interakcji.",
-            "Projekty międzydziałowe w celu budowania relacji w całej firmie.",
-          ],
-        },
-        "4": {
-          description:
-            "W zespole panuje dobra, wspierająca atmosfera. Pracownicy chętnie sobie pomagają i dzielą się wiedzą.",
-          recommendations: [
-            "Wzmacnianie dobrych praktyk poprzez publiczne docenianie współpracy.",
-            "Dawanie zespołowi większej autonomii w podejmowaniu decyzji.",
-            "Celebrowanie sukcesów zespołowych.",
-          ],
-        },
-        "5": {
-          description:
-            "Zespół jest doskonale zintegrowany, panuje w nim atmosfera zaufania, otwartości i synergii. To siła napędowa firmy.",
-          recommendations: [
-            "Wykorzystanie zespołu jako wzoru do naśladowania dla innych.",
-            "Angażowanie zespołu w proces wdrażania nowych pracowników (buddy system).",
-            "Inwestowanie w dalszy rozwój kompetencji zespołowych.",
-          ],
-        },
-        businessImpact:
-          "Zła atmosfera w zespole obniża produktywność i innowacyjność. Dobra atmosfera zwiększa retencję, satysfakcję i efektywność pracy.",
-      },
-    },
-    // Można tutaj dodać kolejne OBSZARY i CZYNNIKI
-  };
+// --- KROK 1: POBRANIE BAZY WIEDZY ---
+const KNOWLEDGE_BASE: KnowledgeBaseMap = getKnowledgeBaseProvider();
+
+// --- KROK 2: FUNKCJE POMOCNICZE ---
+
+/**
+ * Zwraca poziom oceny (1-5) na podstawie wyniku.
+ */
+function getScoreLevel(score: number): 1 | 2 | 3 | 4 | 5 {
+  const roundedScore = Math.round(score);
+  if (roundedScore <= 1) return 1;
+  if (roundedScore >= 5) return 5;
+  return roundedScore as 1 | 2 | 3 | 4 | 5;
 }
 
-// --- KROK 2: KONFIGURACJA MODELU Z NOWĄ BAZĄ WIEDZY ---
-const KNOWLEDGE_BASE = getKnowledgeBase();
+/**
+ * Zwraca rekomendacje dla danego poziomu oceny.
+ */
+function getRecommendationsForLevel(
+  entry: KnowledgeBaseEntry,
+  score: number
+): string[] {
+  const level = getScoreLevel(score);
+  return entry[`scale_${level}_recommendations`];
+}
 
-const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
+/**
+ * Zwraca definicję skali dla danego poziomu oceny.
+ */
+function getDefinitionForLevel(
+  entry: KnowledgeBaseEntry,
+  score: number
+): string {
+  const level = getScoreLevel(score);
+  return entry[`scale_${level}_definition`];
+}
 
-const systemInstruction = `
-Jesteś ekspertem i konsultantem strategicznym HR z 15-letnim doświadczeniem. Twoim zadaniem jest analiza wyników badania satysfakcji i zaangażowania pracowników oraz generowanie na tej podstawie szczegółowego raportu. Zawsze korzystaj z poniższej bazy wiedzy do interpretacji wyników i formułowania rekomendacji. Baza jest ustrukturyzowana jako: Obszar -> Czynnik -> Poziom Oceny (1-5). Twoje analizy muszą być syntezą wniosków z poszczególnych czynników. Twoje odpowiedzi MUSZĄ być w formacie JSON, zgodnie ze strukturą wymaganą w promptach.
+/**
+ * Sortuje czynniki według wyniku.
+ */
+function sortFactors(
+  factorScores: { [key: string]: number },
+  direction: "asc" | "desc" = "asc"
+): [string, number][] {
+  return Object.entries(factorScores).sort(([, scoreA], [, scoreB]) =>
+    direction === "asc" ? scoreA - scoreB : scoreB - scoreA
+  );
+}
 
-=== POCZĄTEK BAZY WIEDZY ===
-${JSON.stringify(KNOWLEDGE_BASE, null, 2)}
-=== KONIEC BAZY WIEDZY ===
-`;
-
-const MODEL_CONFIG: GenerationConfig = {
-  responseMimeType: "application/json",
-  temperature: 0.1,
-  maxOutputTokens: 8192,
-};
-
-const model: GenerativeModel = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-latest",
-  generationConfig: MODEL_CONFIG,
-  systemInstruction: systemInstruction,
-});
-
-// --- KROK 3: GŁÓWNA FUNKCJA I ZAKTUALIZOWANE FUNKCJE POMOCNICZE ---
+// --- KROK 3: GŁÓWNA LOGIKA GENEROWANIA RAPORTU ---
 
 export async function generateReport(
   examinations: (typeof ExaminationTable.$inferSelect)[]
@@ -220,24 +81,26 @@ export async function generateReport(
     );
     const departments = analysisData.departments || [];
 
-    const resolvedDetailedAreas: DetailedAreaContent[] = [];
-    for (const areaData of analysisData.detailed_areas) {
-      console.log(`Rozpoczynam generowanie dla obszaru: ${areaData.area_name}`);
-      const content = await generateDetailedAreaContent(areaData, departments);
-      resolvedDetailedAreas.push(content);
-      console.log(`Zakończono generowanie dla obszaru: ${areaData.area_name}`);
-    }
-    // Przekazujemy `resolvedDetailedAreas` wzbogacone o `factor_scores`
-    const leaderGuidelines = await generateLeaderGuidelines(
+    const resolvedDetailedAreas: DetailedAreaContent[] =
+      analysisData.detailed_areas.map((areaData) => {
+        console.log(
+          `Rozpoczynam generowanie dla obszaru: ${areaData.area_name}`
+        );
+        const content = generateDetailedAreaContent(areaData, departments);
+        console.log(
+          `Zakończono generowanie dla obszaru: ${areaData.area_name}`
+        );
+        return content;
+      });
+
+    const leaderGuidelines = generateLeaderGuidelines(
       resolvedDetailedAreas,
       departments
     );
 
-    const overallContent = await generateOverallContent(
+    const overallContent = generateOverallContent(
       analysisData.overall_analysis,
-      resolvedDetailedAreas,
-      departments,
-      surveyData.length
+      resolvedDetailedAreas
     );
 
     const mergedOverallAnalysis = {
@@ -422,34 +285,6 @@ function calculateStatistics(surveyData: SurveyRespondent[]): StatisticsResult {
   };
 }
 
-async function makeApiCall(prompt: string): Promise<ApiResponse> {
-  try {
-    console.log("--- PROMPT DO API ---", prompt.substring(0, 400), "...");
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const rawResponse = response.text();
-    const finishReason = response.candidates?.[0]?.finishReason;
-    console.log(`📋 API Finish Reason: ${finishReason}`);
-
-    if (finishReason === "MAX_TOKENS")
-      throw new Error("Odpowiedź API została obcięta z powodu limitu tokenów.");
-    if (finishReason !== "STOP" && finishReason !== "FINISH_REASON_UNSPECIFIED")
-      throw new Error(
-        `Generowanie zostało zatrzymane z powodu: ${finishReason}`
-      );
-
-    const cleanedResponse = rawResponse
-      .trim()
-      .replace(/^```json/, "")
-      .replace(/```$/, "")
-      .trim();
-    return JSON.parse(cleanedResponse);
-  } catch (e) {
-    console.error("❌ Błąd wywołania API lub parsowania JSON:", e);
-    throw e;
-  }
-}
-
 async function getInitialAnalysis(
   surveyData: SurveyRespondent[]
 ): Promise<InitialAnalysisResult> {
@@ -496,141 +331,231 @@ async function getInitialAnalysis(
   };
 }
 
-async function generateOverallContent(
+function generateOverallContent(
   overallData: InitialAnalysisResult["overall_analysis"],
-  detailedAreas: DetailedAreaContent[],
-  departments: string[],
-  respondentCount: number
-): Promise<OverallContentResult> {
-  const prompt = `
-      Na podstawie podanych danych z badania, stwórz wartościową analizę strategiczną.
-      
-      === KONTEKST BADANIA ===
-      Liczba respondentów: ${respondentCount}
-      Działy w firmie: ${departments.join(", ")}
-      
-      === WYNIKI OGÓLNE ===
-      ${JSON.stringify(overallData, null, 2)}
-      
-      === WYNIKI SZCZEGÓŁOWE (ŚREDNIE CZYNNIKÓW) ===
-      ${JSON.stringify(
-        detailedAreas.map((a) => ({
-          area: a.area_name,
-          factors: a.factor_scores,
-        })),
-        null,
-        2
-      )}
-            
-      === TWOJE ZADANIE ===
-      Twoim zadaniem jest stworzenie ogólnego podsumowania, agregując wnioski z poszczególnych czynników.
-      1.  **ENGAGEMENT (Zaangażowanie):** Przeanalizuj wyniki czynników składających się na obszar "Uznanie i docenianie". Na tej podstawie znajdź w BAZIE WIEDZY odpowiedni opis, zidentyfikuj kluczowe problemy (najniżej ocenione czynniki) i wygeneruj konkretny 'business_impact'.
-      2.  **SATISFACTION (Satysfakcja):** Zrób to samo dla satysfakcji, analizując czynniki z obszaru "Środowisko Pracy i Kultura organizacyjna".
-      3.  **TOP SCORES INSIGHT:** Przeanalizuj TOP 3 najniższe i najwyższe **obszary**. Wskaż, które **czynniki** w tych obszarach miały największy wpływ na wynik. Zaproponuj 2-3 priorytety strategiczne oparte na analizie czynników.
+  detailedAreas: DetailedAreaContent[]
+): OverallContentResult {
+  const engagementAreaName = "Uznanie i docenianie";
+  const satisfactionAreaName = "Środowisko Pracy i Kultura organizacyjna";
 
-      Zwróć TYLKO JSON o strukturze:
-      {
-        "engagement": { "main_description": "", "attitude_points": [], "duties_points": [], "loyalty_points": [], "business_impact": "" },
-        "satisfaction": { "main_description": "", "attitude_points": [], "duties_points": [], "loyalty_points": [], "business_impact": "" },
-        "top_scores_insights": { "lowest_insight": "", "highest_insight": "" }
-      }
-  `;
-  return makeApiCall(prompt) as unknown as Promise<OverallContentResult>;
+  const findArea = (name: string) =>
+    detailedAreas.find((a) => a.area_name === name);
+
+  const getAreaProperty = (
+    areaName: string,
+    property: keyof KnowledgeBaseEntry
+  ): string => {
+    const area = findArea(areaName);
+    if (!area) return "Brak danych.";
+
+    const sortedFactors = sortFactors(area.factor_scores, "asc");
+    const lowestFactorName = sortedFactors[0]?.[0];
+
+    if (!lowestFactorName) return "Brak danych o czynnikach.";
+    const entry = KNOWLEDGE_BASE.get(lowestFactorName);
+    return (entry?.[property] as string) || `Brak danych dla '${property}'.`;
+  };
+
+  const generateTopInsights = (
+    areas: { area: string; average: number }[],
+    type: "lowest" | "highest"
+  ): string => {
+    return areas
+      .map((areaData) => {
+        const areaDetails = findArea(areaData.area);
+        if (!areaDetails)
+          return `Brak szczegółowych danych dla obszaru ${areaData.area}.`;
+
+        const sortedFactors = sortFactors(
+          areaDetails.factor_scores,
+          type === "lowest" ? "asc" : "desc"
+        );
+        const keyFactorName = sortedFactors[0]?.[0];
+        if (!keyFactorName)
+          return `Brak czynników dla obszaru ${areaData.area}.`;
+
+        const entry = KNOWLEDGE_BASE.get(keyFactorName);
+        if (!entry)
+          return `Brak danych w bazie wiedzy dla czynnika ${keyFactorName}.`;
+
+        const definition = getDefinitionForLevel(entry, areaData.average);
+        const prefix =
+          type === "lowest"
+            ? "Kluczowym wyzwaniem jest"
+            : "Największą siłą jest";
+        return `Obszar "${areaData.area}" (${areaData.average.toFixed(
+          2
+        )}): ${prefix} "${keyFactorName}". ${definition}`;
+      })
+      .join(" ");
+  };
+
+  return {
+    engagement: {
+      main_description: getAreaProperty(
+        engagementAreaName,
+        "factor_definition"
+      ),
+      attitude_points: [],
+      duties_points: [],
+      loyalty_points: [],
+      business_impact: getAreaProperty(engagementAreaName, "business_impact"),
+    },
+    satisfaction: {
+      main_description: getAreaProperty(
+        satisfactionAreaName,
+        "factor_definition"
+      ),
+      attitude_points: [],
+      duties_points: [],
+      loyalty_points: [],
+      business_impact: getAreaProperty(satisfactionAreaName, "business_impact"),
+    },
+    top_scores_insights: {
+      lowest_insight: generateTopInsights(
+        overallData.top_scores.lowest.data,
+        "lowest"
+      ),
+      highest_insight: generateTopInsights(
+        overallData.top_scores.highest.data,
+        "highest"
+      ),
+    },
+  };
 }
 
-async function generateDetailedAreaContent(
+function generateDetailedAreaContent(
   areaData: DetailedAreaData,
   departments: string[]
-): Promise<DetailedAreaContent> {
-  const prompt = `
-      Jako ekspert HR, stwórz rozdział raportu dla obszaru: "${
-        areaData.area_name
-      }".
-      Średnia ocena dla całego obszaru: ${areaData.overall_average}.
-      
-      Wyniki dla poszczególnych CZYNNIKÓW w tym obszarze:
-      ${JSON.stringify(areaData.factor_scores, null, 2)}
-      
-      Wyniki dla poszczególnych DZIAŁÓW w tym obszarze:
-      ${JSON.stringify(areaData.team_scores, null, 2)}
-      
-      Zadania (korzystając z BAZY WIEDZY):
-      1.  **company_summary**: Stwórz syntetyczny paragraf podsumowujący. W kluczowych wnioskach wskaż 2-3 najważniejsze czynniki (najwyżej i najniżej ocenione) i wyjaśnij, co ich kombinacja oznacza dla firmy.
-      2.  **team_breakdown**: Dla KAŻDEGO działu z listy (${departments.join(
-        ", "
-      )}) stwórz zwięzłą interpretację na podstawie description z bazy wiedzy i 2-4 najważniejsze rekomendacje, bazując na ich specyficznych wynikach i najsłabszych czynnikach.
-      3.  **organizational_recommendations**: Wygeneruj 2-4 bloki ogólnych rekomendacji dla całej organizacji, które wynikają z analizy wszystkich czynników w tym obszarze. Skup się na tych o największym potencjale do poprawy.
-      4.  **business_impact**: Zsyntetyzuj informacje o wpływie na biznes z BAZY WIEDZY dla najistotniejszych (najniżej ocenionych) czynników w tym obszarze.
+): DetailedAreaContent {
+  const { factor_scores, team_scores, overall_average } = areaData;
 
-      Zwróć TYLKO JSON, zachowując poniższą strukturę:
-      {
-        "company_summary": { "title": "Cała firma i zespoły", "overall_average_text": "Średnia ocena ogólna: ${
-          areaData.overall_average
-        } (skala 1-5)", "sub_areas_breakdown": [], "key_findings_header": "Kluczowe Wnioski", "key_findings_points": [], "summary_header": "Podsumowanie", "summary_paragraph": "" },
-        "team_breakdown": { "title": "Omówienie wyników w zespołach", "table_headers": ["Dział", "Wynik", "Interpretacja", "Jak poprawić wynik?"], "data": [] },
-        "organizational_recommendations": { "title": "Rekomendacje dla całej organizacji", "recommendation_blocks": [{ "title": "", "points": [] }] },
-        "business_impact": { "title": "Jak to wpływa na biznes?", "points": [] }
-      }`;
-  const content = (await makeApiCall(prompt)) as unknown as DetailedAreaContent;
-  // Dołączamy oryginalne dane, aby można było z nich korzystać w kolejnych krokach
-  return { ...areaData, ...content };
-}
+  const sortedFactors = sortFactors(factor_scores, "asc");
+  const lowestFactor = sortedFactors[0];
 
-async function generateLeaderGuidelines(
-  detailedAreas: DetailedAreaContent[],
-  departments: string[]
-): Promise<LeaderGuideline[]> {
-  const leaderData = departments.map((dept) => {
-    const scores = detailedAreas
-      .map((area) => {
-        // Znajdź najsłabszy czynnik dla danego działu w tym obszarze
-        let weakest_factor = "brak danych";
-        let lowest_score = 6;
+  const allRecommendations = Object.entries(factor_scores)
+    .flatMap(([factorName, score]) => {
+      const entry = KNOWLEDGE_BASE.get(factorName);
+      return entry ? getRecommendationsForLevel(entry, score) : [];
+    })
+    .filter((value, index, self) => self.indexOf(value) === index); // Unique
 
-        if (area.factor_scores) {
-          for (const factor in area.factor_scores) {
-            const score = area.factor_scores[factor];
-            // Potrzebujemy wyników per czynnik per dział, które nie są bezpośrednio w tej strukturze.
-            // Dla uproszczenia, użyjemy ogólnego najsłabszego czynnika w obszarze
-            if (score !== undefined && score < lowest_score) {
-              lowest_score = score;
-              weakest_factor = factor;
-            }
+  let summary_paragraph = "";
+  let business_impact_points: string[] = [];
+  if (lowestFactor) {
+    const entry = KNOWLEDGE_BASE.get(lowestFactor[0]);
+    if (entry) {
+      summary_paragraph = entry.factor_definition;
+      business_impact_points = [entry.business_impact];
+    }
+  }
+
+  return {
+    ...areaData,
+    company_summary: {
+      title: "Cała firma i zespoły",
+      overall_average_text: `Średnia ocena ogólna: ${overall_average.toFixed(
+        2
+      )} (skala 1-5)`,
+      sub_areas_breakdown: [],
+      key_findings_header: "",
+      key_findings_points: [],
+      summary_header: "Podsumowanie",
+      summary_paragraph,
+    },
+    team_breakdown: {
+      title: "Omówienie wyników w zespołach",
+      table_headers: ["Dział", "Wynik", "Interpretacja", "Jak poprawić wynik?"],
+      data: departments.map((dept) => {
+        const team_score = team_scores[dept] || 0;
+        let interpretation = `Średni wynik dla działu ${dept} to ${team_score.toFixed(
+          2
+        )}.`;
+        let team_recommendations: string[] = [
+          "Brak szczegółowych rekomendacji.",
+        ];
+
+        if (lowestFactor) {
+          const weakestFactorEntry = KNOWLEDGE_BASE.get(lowestFactor[0]);
+          if (weakestFactorEntry) {
+            interpretation = getDefinitionForLevel(
+              weakestFactorEntry,
+              team_score
+            );
+            team_recommendations = getRecommendationsForLevel(
+              weakestFactorEntry,
+              team_score
+            );
           }
         }
 
         return {
-          area: area.area_name,
-          score: area.team_scores?.[dept] || 0,
-          weakest_factor: weakest_factor,
+          Dział: dept,
+          Wynik: team_score.toFixed(2),
+          Interpretacja: interpretation,
+          "Jak poprawić wynik?": team_recommendations,
         };
-      })
+      }),
+    },
+    organizational_recommendations: {
+      title: "Rekomendacje dla całej organizacji",
+      recommendation_blocks:
+        allRecommendations.length > 0
+          ? [
+              {
+                title: `Rekomendacje dla obszaru: ${areaData.area_name}`,
+                points: allRecommendations,
+              },
+            ]
+          : [],
+    },
+    business_impact: {
+      title: "Jak to wpływa na biznes?",
+      points: business_impact_points,
+    },
+  };
+}
+
+function generateLeaderGuidelines(
+  detailedAreas: DetailedAreaContent[],
+  departments: string[]
+): LeaderGuideline[] {
+  return departments.map((dept) => {
+    const departmentScoresByArea = detailedAreas
+      .map((area) => ({
+        area_name: area.area_name,
+        score: area.team_scores[dept] || 0,
+        factor_scores: area.factor_scores,
+      }))
       .sort((a, b) => a.score - b.score);
+
+    const lowestAreas = departmentScoresByArea.slice(0, 2);
+    const highestAreas = departmentScoresByArea.slice(-2).reverse();
+
+    const startRecommendations = lowestAreas
+      .flatMap((area) => {
+        const sortedFactors = sortFactors(area.factor_scores, "asc");
+        const weakestFactorName = sortedFactors[0]?.[0];
+        if (!weakestFactorName) return [];
+
+        const entry = KNOWLEDGE_BASE.get(weakestFactorName);
+        const score = area.factor_scores[weakestFactorName];
+        return entry && score !== undefined
+          ? getRecommendationsForLevel(entry, score)
+          : [];
+      })
+      .filter((value, index, self) => self.indexOf(value) === index); // Unique
+
+    const continueActions = highestAreas.map(
+      (area) => `Kontynuujcie dobre praktyki w obszarze: ${area.area_name}.`
+    );
 
     return {
       department: dept,
-      lowest_areas: scores.slice(0, 2),
-      highest_areas: scores.slice(-2).reverse(),
+      start: startRecommendations,
+      stop: [],
+      continue: continueActions,
+      welcome: [],
     };
   });
-
-  const prompt = `
-      Jesteś coachem dla managerów. Stwórz praktyczne wskazówki dla liderów każdego z działów.
-
-      Dane analityczne (najlepsze i najgorsze obszary dla każdego działu oraz ich najsłabsze czynniki): 
-      ${JSON.stringify(leaderData, null, 2)}
-      
-      Zadania (dla każdego działu osobno):
-      1. Na podstawie najsłabszych OBSZARÓW i wskazanych w nich najsłabszych CZYNNIKÓW, sformułuj konkretne porady w formacie START, STOP, CONTINUE, WELCOME, korzystając z BAZY WIEDZY.
-      2. 'Start' musi zawierać rekomendacje z BAZY WIEDZY dla najsłabszych czynników.
-      3. 'Stop' musi opisywać negatywne zachowania wynikające z niskich ocen.
-      4. 'Continue' musi opisywać pozytywne praktyki wynikające z wysokich ocen.
-      5. 'Welcome' musi zawierać innowacyjne, aspiracyjne pomysły na przyszłość.
-
-      Zwróć TYLKO JSON, który jest tablicą obiektów dla każdego działu z listy: ${departments.join(
-        ", "
-      )}
-      [{ "department": "Nazwa działu", "start": [], "stop": [], "continue": [], "welcome": [] }]
-  `;
-  return makeApiCall(prompt) as unknown as Promise<LeaderGuideline[]>;
 }

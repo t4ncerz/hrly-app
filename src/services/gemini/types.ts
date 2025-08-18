@@ -92,28 +92,6 @@ export interface InitialAnalysisResult {
   departments: string[];
 }
 
-export interface KnowledgeBaseLevel {
-  description: string;
-  recommendations: string[];
-}
-
-export interface KnowledgeBaseFactor {
-  "1": KnowledgeBaseLevel;
-  "2": KnowledgeBaseLevel;
-  "3": KnowledgeBaseLevel;
-  "4": KnowledgeBaseLevel;
-  "5": KnowledgeBaseLevel;
-  businessImpact: string;
-}
-
-export interface KnowledgeBaseArea {
-  [factorName: string]: KnowledgeBaseFactor;
-}
-
-export interface KnowledgeBase {
-  [areaName: string]: KnowledgeBaseArea;
-}
-
 export interface OverallContentResult {
   engagement: {
     main_description: string;
