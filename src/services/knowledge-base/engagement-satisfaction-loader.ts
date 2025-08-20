@@ -19,7 +19,7 @@ function parseRecommendations(recString: string): string[] {
 export function loadEngagementSatisfactionBase(): EngagementSatisfactionMap {
   const csvFilePath = path.join(
     process.cwd(),
-    "src/services/gemini/engagement-and-satisfaction.csv"
+    "public/data/engagement-and-satisfaction.csv"
   );
   const csvFile = fs.readFileSync(csvFilePath, "utf8");
 
@@ -53,7 +53,7 @@ export function loadEngagementSatisfactionBase(): EngagementSatisfactionMap {
               row["Rekomendacje poziom 3."] || ""
             ),
             scale_4_level: row["skala: 4"]?.trim() || "",
-            scale_4_definition: row["definicja skali: 4"]?.trim() || "",
+            scale_4_definition: row["definicja skali 4"]?.trim() || "",
             scale_4_recommendations: parseRecommendations(
               row["Rekomendacje poziom 4. "] || ""
             ),

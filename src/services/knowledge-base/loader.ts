@@ -14,10 +14,7 @@ function parseRecommendations(recString: string): string[] {
 }
 
 export function loadKnowledgeBase(): KnowledgeBaseMap {
-  const csvFilePath = path.join(
-    process.cwd(),
-    "src/services/gemini/czynniki.csv"
-  );
+  const csvFilePath = path.join(process.cwd(), "public/data/czynniki.csv");
   const csvFile = fs.readFileSync(csvFilePath, "utf8");
 
   const knowledgeBase: KnowledgeBaseMap = new Map();
@@ -41,7 +38,7 @@ export function loadKnowledgeBase(): KnowledgeBaseMap {
             area: row["Większe zbiory czynników"]?.trim() || "",
             factor_definition: row["Definicja czynnika"]?.trim() || "",
             scale_1_level: row["Skala: 1"]?.trim() || "",
-            scale_1_definition: row["definicja skali 1"]?.trim() || "",
+            scale_1_definition: row["definicja skali 1. "]?.trim() || "",
             scale_1_recommendations: parseRecommendations(
               row["Rekomendacje poziom 1."] || ""
             ),

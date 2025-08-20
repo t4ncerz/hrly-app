@@ -19,6 +19,33 @@ const KNOWLEDGE_BASE: KnowledgeBaseMap = getKnowledgeBaseProvider();
 // --- KROK 2: FUNKCJE POMOCNICZE ---
 
 /**
+ * Normalizuje tekst do porównywania (małe litery, bez polskich znaków, 1 spacja).
+ */
+function normalize(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Znajduje wpis KB po nazwie czynnika z tolerancją na diakrytyki i spacje.
+ */
+function findEntryByFactorName(
+  factorName: string
+): KnowledgeBaseEntry | undefined {
+  const direct = KNOWLEDGE_BASE.get(factorName);
+  if (direct) return direct;
+  const target = normalize(factorName);
+  for (const [key, entry] of KNOWLEDGE_BASE.entries()) {
+    if (normalize(key) === target) return entry;
+  }
+  return undefined;
+}
+
+/**
  * Zwraca poziom oceny (1-5) na podstawie wyniku.
  */
 function getScoreLevel(score: number): 1 | 2 | 3 | 4 | 5 {
@@ -36,7 +63,16 @@ function getRecommendationsForLevel(
   score: number
 ): string[] {
   const level = getScoreLevel(score);
-  return entry[`scale_${level}_recommendations`];
+  const recs = entry[`scale_${level}_recommendations`] || [];
+  if (recs.length > 0) return recs;
+  // Fallback: jeśli brak rekomendacji poziomu, użyj ogólnych (jeśli są)
+  if (entry.recommendations) {
+    return entry.recommendations
+      .split(/\n+|;\s*|\d\.\s+/)
+      .map((r) => r.trim())
+      .filter(Boolean);
+  }
+  return [];
 }
 
 /**
@@ -47,7 +83,7 @@ function getDefinitionForLevel(
   score: number
 ): string {
   const level = getScoreLevel(score);
-  return entry[`scale_${level}_definition`];
+  return entry[`scale_${level}_definition`] || entry.factor_definition || "";
 }
 
 /**
@@ -382,7 +418,7 @@ function generateOverallContent(
     const lowestFactorName = sortedFactors[0]?.[0];
 
     if (!lowestFactorName) return "Brak danych o czynnikach.";
-    const entry = KNOWLEDGE_BASE.get(lowestFactorName);
+    const entry = findEntryByFactorName(lowestFactorName);
     return (entry?.[property] as string) || `Brak danych dla '${property}'.`;
   };
 
@@ -404,7 +440,7 @@ function generateOverallContent(
         if (!keyFactorName)
           return `Brak czynników dla obszaru ${areaData.area}.`;
 
-        const entry = KNOWLEDGE_BASE.get(keyFactorName);
+        const entry = findEntryByFactorName(keyFactorName);
         if (!entry)
           return `Brak danych w bazie wiedzy dla czynnika ${keyFactorName}.`;
 
@@ -429,9 +465,7 @@ function generateOverallContent(
       attitude_points: [],
       duties_points: [],
       loyalty_points: [],
-      business_impact:
-        overallData.engagement.linked_indicators ||
-        getAreaProperty(engagementAreaName, "business_impact"),
+      business_impact: getAreaProperty(engagementAreaName, "business_impact"),
     },
     satisfaction: {
       main_description: getAreaProperty(
@@ -441,9 +475,7 @@ function generateOverallContent(
       attitude_points: [],
       duties_points: [],
       loyalty_points: [],
-      business_impact:
-        overallData.satisfaction.linked_indicators ||
-        getAreaProperty(satisfactionAreaName, "business_impact"),
+      business_impact: getAreaProperty(satisfactionAreaName, "business_impact"),
     },
     top_scores_insights: {
       lowest_insight: generateTopInsights(
@@ -469,7 +501,7 @@ function generateDetailedAreaContent(
 
   const allRecommendations = Object.entries(factor_scores)
     .flatMap(([factorName, score]) => {
-      const entry = KNOWLEDGE_BASE.get(factorName);
+      const entry = findEntryByFactorName(factorName);
       return entry ? getRecommendationsForLevel(entry, score) : [];
     })
     .filter((value, index, self) => self.indexOf(value) === index); // Unique
@@ -477,7 +509,7 @@ function generateDetailedAreaContent(
   let summary_paragraph = "";
   let business_impact_points: string[] = [];
   if (lowestFactor) {
-    const entry = KNOWLEDGE_BASE.get(lowestFactor[0]);
+    const entry = findEntryByFactorName(lowestFactor[0]);
     if (entry) {
       summary_paragraph = entry.factor_definition;
       business_impact_points = [entry.business_impact];
@@ -510,7 +542,7 @@ function generateDetailedAreaContent(
         ];
 
         if (lowestFactor) {
-          const weakestFactorEntry = KNOWLEDGE_BASE.get(lowestFactor[0]);
+          const weakestFactorEntry = findEntryByFactorName(lowestFactor[0]);
           if (weakestFactorEntry) {
             interpretation = getDefinitionForLevel(
               weakestFactorEntry,
@@ -572,7 +604,7 @@ function generateLeaderGuidelines(
         const weakestFactorName = sortedFactors[0]?.[0];
         if (!weakestFactorName) return [];
 
-        const entry = KNOWLEDGE_BASE.get(weakestFactorName);
+        const entry = findEntryByFactorName(weakestFactorName);
         const score = area.factor_scores[weakestFactorName];
         return entry && score !== undefined
           ? getRecommendationsForLevel(entry, score)

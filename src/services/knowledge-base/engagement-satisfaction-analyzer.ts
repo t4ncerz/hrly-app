@@ -23,7 +23,16 @@ export function getEngagementSatisfactionRecommendations(
   score: number
 ): string[] {
   const level = getEngagementSatisfactionLevel(score);
-  return entry[`scale_${level}_recommendations`] || [];
+  const recs = entry[`scale_${level}_recommendations`] || [];
+  if (recs.length > 0) return recs;
+  // Fallback: brak dedykowanych rekomendacji poziomu – spróbuj wydzielić z area_definition lub general_description
+  const fallbackSource =
+    entry.general_description || entry.area_definition || "";
+  if (!fallbackSource) return [];
+  return fallbackSource
+    .split(/\n+|;\s*|\d\.\s+/)
+    .map((r) => r.trim())
+    .filter(Boolean);
 }
 
 /**
@@ -34,7 +43,12 @@ export function getEngagementSatisfactionDefinition(
   score: number
 ): string {
   const level = getEngagementSatisfactionLevel(score);
-  return entry[`scale_${level}_definition`] || "";
+  return (
+    entry[`scale_${level}_definition`] ||
+    entry.general_description ||
+    entry.area_definition ||
+    ""
+  );
 }
 
 /**
