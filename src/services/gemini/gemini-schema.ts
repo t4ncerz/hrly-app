@@ -30,6 +30,13 @@ export const reportSchema: Schema = {
           properties: {
             overall_score: { type: SchemaType.NUMBER },
             title: { type: SchemaType.STRING },
+            level: { type: SchemaType.NUMBER },
+            definition: { type: SchemaType.STRING },
+            recommendations: {
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING },
+            },
+            linked_indicators: { type: SchemaType.STRING },
             main_description: { type: SchemaType.STRING },
             attitude_points: {
               type: SchemaType.ARRAY,
@@ -60,6 +67,13 @@ export const reportSchema: Schema = {
           properties: {
             overall_score: { type: SchemaType.NUMBER },
             title: { type: SchemaType.STRING },
+            level: { type: SchemaType.NUMBER },
+            definition: { type: SchemaType.STRING },
+            recommendations: {
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING },
+            },
+            linked_indicators: { type: SchemaType.STRING },
             main_description: { type: SchemaType.STRING },
             attitude_points: {
               type: SchemaType.ARRAY,

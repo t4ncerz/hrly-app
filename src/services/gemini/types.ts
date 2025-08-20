@@ -62,10 +62,18 @@ export interface InitialAnalysisResult {
     engagement: {
       overall_score: number;
       title: string;
+      level?: 1 | 2 | 3 | 4 | 5;
+      definition?: string;
+      recommendations?: string[];
+      linked_indicators?: string;
     };
     satisfaction: {
       overall_score: number;
       title: string;
+      level?: 1 | 2 | 3 | 4 | 5;
+      definition?: string;
+      recommendations?: string[];
+      linked_indicators?: string;
     };
     top_scores: {
       lowest: {

@@ -163,9 +163,9 @@ export const ReportPdfDocument: React.FC<ReportPdfDocumentProps> = ({
         </Text>
       </View>
 
-      {reportContent.overall_analysis.engagement.main_description && (
+      {reportContent.overall_analysis.engagement.definition && (
         <Text style={styles.text}>
-          {reportContent.overall_analysis.engagement.main_description}
+          {reportContent.overall_analysis.engagement.definition}
         </Text>
       )}
 
@@ -233,9 +233,9 @@ export const ReportPdfDocument: React.FC<ReportPdfDocumentProps> = ({
         </Text>
       </View>
 
-      {reportContent.overall_analysis.satisfaction.main_description && (
+      {reportContent.overall_analysis.satisfaction.definition && (
         <Text style={styles.text}>
-          {reportContent.overall_analysis.satisfaction.main_description}
+          {reportContent.overall_analysis.satisfaction.definition}
         </Text>
       )}
 

@@ -178,8 +178,8 @@ export default async function PrintPage({ params }: PrintPageProps) {
             {content.overall_analysis.engagement.overall_score}
           </div>
 
-          {content.overall_analysis.engagement.main_description && (
-            <p>{content.overall_analysis.engagement.main_description}</p>
+          {content.overall_analysis.engagement.definition && (
+            <p>{content.overall_analysis.engagement.definition}</p>
           )}
 
           {content.overall_analysis.engagement.attitude_points.length > 0 && (
@@ -234,8 +234,8 @@ export default async function PrintPage({ params }: PrintPageProps) {
             {content.overall_analysis.satisfaction.overall_score}
           </div>
 
-          {content.overall_analysis.satisfaction.main_description && (
-            <p>{content.overall_analysis.satisfaction.main_description}</p>
+          {content.overall_analysis.satisfaction.definition && (
+            <p>{content.overall_analysis.satisfaction.definition}</p>
           )}
 
           {content.overall_analysis.satisfaction.attitude_points.length > 0 && (

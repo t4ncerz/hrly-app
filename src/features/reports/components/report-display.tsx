@@ -96,13 +96,29 @@ function ReportDisplayComponent({
           </div>
 
           <div className="mb-6">
-            <div className="text-4xl font-extrabold text-violet-500 mb-2">
-              {reportContent.overall_analysis.engagement.overall_score}
+            <div className="flex items-center gap-4 mb-4">
+              <div className="text-4xl font-extrabold text-violet-500">
+                {reportContent.overall_analysis.engagement.overall_score}
+              </div>
+              {reportContent.overall_analysis.engagement.level && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500">Poziom:</span>
+                  <div className="px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-sm font-medium">
+                    {reportContent.overall_analysis.engagement.level}/5
+                  </div>
+                </div>
+              )}
             </div>
-            {reportContent.overall_analysis.engagement.main_description && (
-              <p className="text-gray-600 dark:text-gray-400">
-                {reportContent.overall_analysis.engagement.main_description}
-              </p>
+
+            {reportContent.overall_analysis.engagement.definition && (
+              <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Interpretacja poziomu
+                </h4>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {reportContent.overall_analysis.engagement.definition}
+                </p>
+              </div>
             )}
           </div>
 
@@ -196,13 +212,29 @@ function ReportDisplayComponent({
           </div>
 
           <div className="mb-6">
-            <div className="text-4xl font-extrabold text-green-500 mb-2">
-              {reportContent.overall_analysis.satisfaction.overall_score}
+            <div className="flex items-center gap-4 mb-4">
+              <div className="text-4xl font-extrabold text-green-500">
+                {reportContent.overall_analysis.satisfaction.overall_score}
+              </div>
+              {reportContent.overall_analysis.satisfaction.level && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500">Poziom:</span>
+                  <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                    {reportContent.overall_analysis.satisfaction.level}/5
+                  </div>
+                </div>
+              )}
             </div>
-            {reportContent.overall_analysis.satisfaction.main_description && (
-              <p className="text-gray-600 dark:text-gray-400">
-                {reportContent.overall_analysis.satisfaction.main_description}
-              </p>
+
+            {reportContent.overall_analysis.satisfaction.definition && (
+              <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Interpretacja poziomu
+                </h4>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {reportContent.overall_analysis.satisfaction.definition}
+                </p>
+              </div>
             )}
           </div>
 
@@ -284,6 +316,61 @@ function ReportDisplayComponent({
               </p>
             </div>
           )}
+        </div>
+
+        {/* Recommendations for Engagement and Satisfaction */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Engagement Recommendations */}
+          {reportContent.overall_analysis.engagement.recommendations &&
+            reportContent.overall_analysis.engagement.recommendations.length >
+              0 && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-3 h-3 bg-violet-500 rounded-full mr-3"></div>
+                  <h3 className="h4 text-gray-900 dark:text-white">
+                    Rekomendacje dla zaangażowania
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {reportContent.overall_analysis.engagement.recommendations.map(
+                    (recommendation, index) => (
+                      <div key={index} className="flex items-start">
+                        <span className="w-2 h-2 bg-violet-500 rounded-full mt-2 mr-3 shrink-0"></span>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {recommendation}
+                        </p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+
+          {/* Satisfaction Recommendations */}
+          {reportContent.overall_analysis.satisfaction.recommendations &&
+            reportContent.overall_analysis.satisfaction.recommendations.length >
+              0 && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                  <h3 className="h4 text-gray-900 dark:text-white">
+                    Rekomendacje dla satysfakcji
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {reportContent.overall_analysis.satisfaction.recommendations.map(
+                    (recommendation, index) => (
+                      <div key={index} className="flex items-start">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 shrink-0"></span>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {recommendation}
+                        </p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
         </div>
 
         {/* Top Scores */}

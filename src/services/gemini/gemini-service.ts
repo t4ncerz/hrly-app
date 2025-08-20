@@ -10,6 +10,8 @@ import {
 } from "./types";
 import { getKnowledgeBaseProvider } from "../knowledge-base/provider";
 import { KnowledgeBaseMap, KnowledgeBaseEntry } from "../knowledge-base/types";
+import { getEngagementSatisfactionProvider } from "../knowledge-base/engagement-satisfaction-provider";
+import { analyzeEngagementSatisfaction } from "../knowledge-base/engagement-satisfaction-analyzer";
 
 // --- KROK 1: POBRANIE BAZY WIEDZY ---
 const KNOWLEDGE_BASE: KnowledgeBaseMap = getKnowledgeBaseProvider();
@@ -109,11 +111,15 @@ export async function generateReport(
         ...analysisData.overall_analysis.engagement,
         ...overallContent.engagement,
         businessImpact: overallContent.engagement.business_impact,
+        recommendations:
+          analysisData.overall_analysis.engagement.recommendations || [],
       },
       satisfaction: {
         ...analysisData.overall_analysis.satisfaction,
         ...overallContent.satisfaction,
         businessImpact: overallContent.satisfaction.business_impact,
+        recommendations:
+          analysisData.overall_analysis.satisfaction.recommendations || [],
       },
       top_scores: {
         ...analysisData.overall_analysis.top_scores,
@@ -289,6 +295,22 @@ async function getInitialAnalysis(
   surveyData: SurveyRespondent[]
 ): Promise<InitialAnalysisResult> {
   const stats = calculateStatistics(surveyData);
+
+  // Pobierz bazę danych zaangażowania i satysfakcji
+  const engagementSatisfactionBase = getEngagementSatisfactionProvider();
+
+  // Analizuj poziom zaangażowania
+  const engagementEntry = engagementSatisfactionBase.get("Zaangażowanie");
+  const engagementAnalysis = engagementEntry
+    ? analyzeEngagementSatisfaction(engagementEntry, stats.engagement)
+    : null;
+
+  // Analizuj poziom satysfakcji
+  const satisfactionEntry = engagementSatisfactionBase.get("Satysfakcja");
+  const satisfactionAnalysis = satisfactionEntry
+    ? analyzeEngagementSatisfaction(satisfactionEntry, stats.satisfaction)
+    : null;
+
   return {
     title_page: {
       company_name: "HRLY",
@@ -308,10 +330,18 @@ async function getInitialAnalysis(
       engagement: {
         overall_score: stats.engagement,
         title: "Poziom zaangażowania w całej organizacji",
+        level: engagementAnalysis?.level,
+        definition: engagementAnalysis?.definition,
+        recommendations: engagementAnalysis?.recommendations,
+        linked_indicators: engagementAnalysis?.linked_indicators,
       },
       satisfaction: {
         overall_score: stats.satisfaction,
         title: "Poziom satysfakcji w całej organizacji",
+        level: satisfactionAnalysis?.level,
+        definition: satisfactionAnalysis?.definition,
+        recommendations: satisfactionAnalysis?.recommendations,
+        linked_indicators: satisfactionAnalysis?.linked_indicators,
       },
       top_scores: {
         lowest: {
@@ -399,7 +429,9 @@ function generateOverallContent(
       attitude_points: [],
       duties_points: [],
       loyalty_points: [],
-      business_impact: getAreaProperty(engagementAreaName, "business_impact"),
+      business_impact:
+        overallData.engagement.linked_indicators ||
+        getAreaProperty(engagementAreaName, "business_impact"),
     },
     satisfaction: {
       main_description: getAreaProperty(
@@ -409,7 +441,9 @@ function generateOverallContent(
       attitude_points: [],
       duties_points: [],
       loyalty_points: [],
-      business_impact: getAreaProperty(satisfactionAreaName, "business_impact"),
+      business_impact:
+        overallData.satisfaction.linked_indicators ||
+        getAreaProperty(satisfactionAreaName, "business_impact"),
     },
     top_scores_insights: {
       lowest_insight: generateTopInsights(

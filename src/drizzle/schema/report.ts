@@ -31,6 +31,10 @@ export type ReportContent = {
     engagement: {
       overall_score: number;
       title: string;
+      level?: 1 | 2 | 3 | 4 | 5;
+      definition?: string;
+      recommendations?: string[];
+      linked_indicators?: string;
       main_description: string;
       attitude_points: string[];
       duties_points: string[];
@@ -40,6 +44,10 @@ export type ReportContent = {
     satisfaction: {
       overall_score: number;
       title: string;
+      level?: 1 | 2 | 3 | 4 | 5;
+      definition?: string;
+      recommendations?: string[];
+      linked_indicators?: string;
       main_description: string;
       attitude_points: string[];
       duties_points: string[];
