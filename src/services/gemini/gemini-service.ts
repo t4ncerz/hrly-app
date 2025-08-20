@@ -8,13 +8,20 @@ import {
   DetailedAreaContent,
   LeaderGuideline,
 } from "./types";
-import { getKnowledgeBaseProvider } from "../knowledge-base/provider";
+import { getKnowledgeBaseProviderAsync } from "../knowledge-base/provider";
 import { KnowledgeBaseMap, KnowledgeBaseEntry } from "../knowledge-base/types";
-import { getEngagementSatisfactionProvider } from "../knowledge-base/engagement-satisfaction-provider";
+import { getEngagementSatisfactionProviderAsync } from "../knowledge-base/engagement-satisfaction-provider";
 import { analyzeEngagementSatisfaction } from "../knowledge-base/engagement-satisfaction-analyzer";
 
 // --- KROK 1: POBRANIE BAZY WIEDZY ---
-const KNOWLEDGE_BASE: KnowledgeBaseMap = getKnowledgeBaseProvider();
+let KB: KnowledgeBaseMap | null = null;
+
+async function ensureKnowledgeBase(): Promise<KnowledgeBaseMap> {
+  if (!KB) {
+    KB = await getKnowledgeBaseProviderAsync();
+  }
+  return KB;
+}
 
 // --- KROK 2: FUNKCJE POMOCNICZE ---
 
@@ -36,10 +43,11 @@ function normalize(text: string): string {
 function findEntryByFactorName(
   factorName: string
 ): KnowledgeBaseEntry | undefined {
-  const direct = KNOWLEDGE_BASE.get(factorName);
+  if (!KB) return undefined;
+  const direct = KB.get(factorName);
   if (direct) return direct;
   const target = normalize(factorName);
-  for (const [key, entry] of KNOWLEDGE_BASE.entries()) {
+  for (const [key, entry] of KB.entries()) {
     if (normalize(key) === target) return entry;
   }
   return undefined;
@@ -104,6 +112,9 @@ export async function generateReport(
   examinations: (typeof ExaminationTable.$inferSelect)[]
 ): Promise<ReportContent> {
   try {
+    // Ensure KB is loaded (via fetch on Vercel)
+    await ensureKnowledgeBase();
+
     const surveyData =
       examinations.length > 0
         ? examinations.map((e) => e.sourceData).flat()
@@ -332,8 +343,9 @@ async function getInitialAnalysis(
 ): Promise<InitialAnalysisResult> {
   const stats = calculateStatistics(surveyData);
 
-  // Pobierz bazę danych zaangażowania i satysfakcji
-  const engagementSatisfactionBase = getEngagementSatisfactionProvider();
+  // Pobierz bazę danych zaangażowania i satysfakcji (async)
+  const engagementSatisfactionBase =
+    await getEngagementSatisfactionProviderAsync();
 
   // Analizuj poziom zaangażowania
   const engagementEntry = engagementSatisfactionBase.get("Zaangażowanie");

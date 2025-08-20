@@ -16,6 +16,84 @@ function parseRecommendations(recString: string): string[] {
     .filter(Boolean);
 }
 
+function parseEngagementSatisfactionCSV(
+  csvFile: string
+): EngagementSatisfactionMap {
+  const engagementSatisfactionBase: EngagementSatisfactionMap = new Map();
+
+  Papa.parse(csvFile, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (header) => header.trim(),
+    complete: (results) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      results.data.forEach((row: any) => {
+        const area = row["Obszar"]?.trim();
+
+        if (area && (area === "Satysfakcja" || area === "Zaangażowanie")) {
+          const entry: EngagementSatisfactionEntry = {
+            area: area,
+            scale_1_level: row["Skala: 1"]?.trim() || "",
+            scale_1_definition: row["definicja skali 1. "]?.trim() || "",
+            scale_1_recommendations: parseRecommendations(
+              row["Rekomendacje poziom 1."] || ""
+            ),
+            scale_2_level: row["Skala: 2"]?.trim() || "",
+            scale_2_definition: row["definicja skali: 2"]?.trim() || "",
+            scale_2_recommendations: parseRecommendations(
+              row["Rekomendacje poziom 2."] || ""
+            ),
+            scale_3_level: row["skala: 3"]?.trim() || "",
+            scale_3_definition: row["definicja skali: 3"]?.trim() || "",
+            scale_3_recommendations: parseRecommendations(
+              row["Rekomendacje poziom 3."] || ""
+            ),
+            scale_4_level: row["skala: 4"]?.trim() || "",
+            scale_4_definition: row["definicja skali 4"]?.trim() || "",
+            scale_4_recommendations: parseRecommendations(
+              row["Rekomendacje poziom 4. "] || ""
+            ),
+            scale_5_level: row["skala: 5"]?.trim() || "",
+            scale_5_definition: row["definicja skali: 5"]?.trim() || "",
+            scale_5_recommendations: parseRecommendations(
+              row["Rekomendacje poziom 5. "] || ""
+            ),
+            general_description:
+              row["Ogólny opis min. i max. skali"]?.trim() || "",
+            linked_indicators: row["Wskaźniki połączone"]?.trim() || "",
+            area_definition:
+              row["Definicja zbiorów (kolumny A) "]?.trim() || "",
+          };
+          engagementSatisfactionBase.set(area, entry);
+        }
+      });
+    },
+  });
+
+  return engagementSatisfactionBase;
+}
+
+export async function loadEngagementSatisfactionBaseAsync(): Promise<EngagementSatisfactionMap> {
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  try {
+    const res = await fetch(`${baseUrl}/data/engagement-and-satisfaction.csv`, {
+      next: { revalidate: 60 * 60 * 24 },
+    } as RequestInit);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const csv = await res.text();
+    return parseEngagementSatisfactionCSV(csv);
+  } catch {
+    const csvFilePath = path.join(
+      process.cwd(),
+      "public/data/engagement-and-satisfaction.csv"
+    );
+    const csvFile = fs.readFileSync(csvFilePath, "utf8");
+    return parseEngagementSatisfactionCSV(csvFile);
+  }
+}
+
 export function loadEngagementSatisfactionBase(): EngagementSatisfactionMap {
   const csvFilePath = path.join(
     process.cwd(),
