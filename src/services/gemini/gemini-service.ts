@@ -16,9 +16,11 @@ import { analyzeEngagementSatisfaction } from "../knowledge-base/engagement-sati
 // --- KROK 1: POBRANIE BAZY WIEDZY ---
 let KB: KnowledgeBaseMap | null = null;
 
-async function ensureKnowledgeBase(): Promise<KnowledgeBaseMap> {
+async function ensureKnowledgeBase(
+  baseUrl?: string
+): Promise<KnowledgeBaseMap> {
   if (!KB) {
-    KB = await getKnowledgeBaseProviderAsync();
+    KB = await getKnowledgeBaseProviderAsync(baseUrl);
   }
   return KB;
 }
@@ -109,11 +111,12 @@ function sortFactors(
 // --- KROK 3: GŁÓWNA LOGIKA GENEROWANIA RAPORTU ---
 
 export async function generateReport(
-  examinations: (typeof ExaminationTable.$inferSelect)[]
+  examinations: (typeof ExaminationTable.$inferSelect)[],
+  opts?: { baseUrl?: string }
 ): Promise<ReportContent> {
   try {
     // Ensure KB is loaded (via fetch on Vercel)
-    await ensureKnowledgeBase();
+    await ensureKnowledgeBase(opts?.baseUrl);
 
     const surveyData =
       examinations.length > 0
@@ -126,7 +129,8 @@ export async function generateReport(
     }
 
     const analysisData = await getInitialAnalysis(
-      surveyData as SurveyRespondent[]
+      surveyData as SurveyRespondent[],
+      opts
     );
     const departments = analysisData.departments || [];
 
@@ -339,13 +343,14 @@ function calculateStatistics(surveyData: SurveyRespondent[]): StatisticsResult {
 }
 
 async function getInitialAnalysis(
-  surveyData: SurveyRespondent[]
+  surveyData: SurveyRespondent[],
+  opts?: { baseUrl?: string }
 ): Promise<InitialAnalysisResult> {
   const stats = calculateStatistics(surveyData);
 
   // Pobierz bazę danych zaangażowania i satysfakcji (async)
   const engagementSatisfactionBase =
-    await getEngagementSatisfactionProviderAsync();
+    await getEngagementSatisfactionProviderAsync(opts?.baseUrl);
 
   // Analizuj poziom zaangażowania
   const engagementEntry = engagementSatisfactionBase.get("Zaangażowanie");

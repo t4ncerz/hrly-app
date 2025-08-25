@@ -14,7 +14,8 @@ export async function insertReport(
     id: string;
     name: string;
     description?: string;
-  }
+  },
+  opts?: { baseUrl?: string }
 ): Promise<Report> {
   console.log("🔍 Looking for examination with ID:", examinationId);
 
@@ -35,7 +36,7 @@ export async function insertReport(
       : 0,
   });
 
-  const content = await generateReport([examination]);
+  const content = await generateReport([examination], opts);
 
   const data: NewReport = {
     id: metadataForReport.id,
@@ -59,5 +60,5 @@ export async function getReport(id: string): Promise<Report | null> {
     .from(ReportTable)
     .where(eq(ReportTable.id, id));
 
-  return report || null;
+  return report ?? null;
 }
