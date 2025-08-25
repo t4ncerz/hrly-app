@@ -17,6 +17,7 @@ export interface SelectProps<
   className?: string;
   disabled?: boolean;
   required?: boolean;
+  placeholder?: string;
 }
 
 export function Select<
@@ -30,6 +31,7 @@ export function Select<
   className = "",
   disabled,
   required,
+  placeholder = "Wybierz...",
   ...props
 }: SelectProps<TFieldValues, TName>) {
   const { field, fieldState } = useController({ control, name, ...props });
@@ -54,6 +56,7 @@ export function Select<
           field.onChange(e.target.value);
         }}
       >
+        <option value="">{placeholder}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

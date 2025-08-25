@@ -30,7 +30,6 @@ export function ReportCreateForm() {
   const [fetchingExaminations, setFetchingExaminations] = useState(true);
   const router = useRouter();
 
-  // Fetch examinations for dropdown
   useEffect(() => {
     async function fetchExaminations() {
       try {
@@ -50,9 +49,8 @@ export function ReportCreateForm() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
       examinationId: "",
+      name: "",
     },
   });
 
