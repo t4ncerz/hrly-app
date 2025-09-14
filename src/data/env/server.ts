@@ -13,6 +13,10 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string(),
     GEMINI_API_KEY: z.string(),
     POSTGRES_SESSION_POOLER_URL: z.string(),
+    POSTGRES_LOCAL_URL: z.string().optional(),
+    NODE_ENV: z
+      .enum(["development", "production", "test"])
+      .default("development"),
     BASIC_AUTH_USERNAME: z.string().default("admin"),
     BASIC_AUTH_PASSWORD: z.string().default("password"),
   },

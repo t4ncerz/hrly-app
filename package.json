@@ -9,7 +9,11 @@
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:setup": "./scripts/setup-local-db.sh",
+    "db:start": "docker-compose up -d db",
+    "db:stop": "docker-compose stop db",
+    "db:reset": "docker-compose down db && docker volume rm hrly-app_pgdata && npm run db:setup"
   },
   "dependencies": {
     "@clerk/localizations": "^3.13.4",
