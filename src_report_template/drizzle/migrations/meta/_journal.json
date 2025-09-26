@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1742930041289,
+      "tag": "0000_material_praxagora",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742940217089,
+      "tag": "0001_volatile_blockbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742944266488,
+      "tag": "0002_lonely_layla_miller",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1742945823523,
+      "tag": "0003_wild_lionheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1742945865662,
+      "tag": "0004_absent_tyger_tiger",
+      "breakpoints": true
+    }
+  ]
+}
