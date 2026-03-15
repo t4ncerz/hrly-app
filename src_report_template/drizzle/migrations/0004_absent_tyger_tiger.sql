@@ -1,1 +1,0 @@
-ALTER TABLE "examinations" DROP COLUMN "userId";
